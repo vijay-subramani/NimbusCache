@@ -261,7 +261,7 @@ extension NimbusCache: @preconcurrency NimbusCacheEventsDelegate {
 }
 
 extension AVPlayerItem {
-    convenience init?(url: URL, isCacheEnabled: Bool = false, cacheManager: NimbusCache = NimbusCache.shared) async {
+    convenience init?(url: URL, isCacheEnabled: Bool = false, cacheManager: NimbusCache = NimbusCache.shared) {
 
         guard isCacheEnabled else {
             self.init(asset: AVAsset(url: url))
