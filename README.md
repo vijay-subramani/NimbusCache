@@ -2,25 +2,27 @@
 
 [![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen)](https://swift.org/package-manager/) [![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-brightgreen)](https://cocoapods.org/)
 
-
-## 🎥 **🔮 Witness the Magic**
-
 <div align="center">
-  <table>
+  <table style="border-collapse: collapse; border: none;">
     <tr>
-      <td align="center">
+      <td align="center" style="padding: 20px;">
         <img src="https://github.com/vijay-subramani/Assets/blob/main/downloadAnimation.gif?raw=true" alt="Fast Caching" width="150"/>  
         <br>  
-        <strong>Fast Caching</strong>  
-        <br>  
-        <em>Files cached in a flash!</em>  
+        <div style="margin-top: 10px;">
+          <strong>Fast Caching</strong>  
+          <br>  
+          <em>Files cached in a flash!</em>  
+        </div>
       </td>
-      <td align="center">
+      <td align="center" style="padding: 20px;">
+        <div style="margin-top: 30px;">
         <img src="https://github.com/vijay-subramani/Assets/blob/main/videoPlaying.gif?raw=true" alt="Instant Video Playback" width="150"/>  
         <br>  
-        <strong>Instant Video Playback</strong>  
-        <br>  
-        <em>No buffering, just magic!</em>  
+        <div style="margin-top: 10px;">
+          <strong>Instant Video Playback</strong>  
+          <br>  
+          <em>No buffering, just magic!</em>  
+        </div>
       </td>
     </tr>
   </table>
@@ -32,8 +34,6 @@
 
 ⚡ **Imagine this:** A user taps on a video, and BOOM—**instant playback** without a single loading screen. They switch screens, come back, and guess what? **Still cached.** No redownloading. No wasted bandwidth. **Just pure speed.** 🚀
 
----
-
 ## ✨ **What Makes NimbusCache Magical?**
 
 ✅ **🚀 Hyper-Speed Video Caching** – Say goodbye to buffering.
@@ -44,8 +44,6 @@
 ✅ **🔮 Future-Ready** – More file types & advanced caching algorithms **coming soon!**
 
 ✨ **No extra dependencies. No unnecessary complexity. Just pure caching magic.**
-
----
 
 ## 📲 **Installation**
 
@@ -61,8 +59,6 @@ Calling NimbusCache is as easy as **summoning a Patronus**:
 
 🎉 **BOOM!** NimbusCache is now in your project! 🚀
 
----
-
 ### 🍩 **CocoaPods**
 For those who prefer **CocoaPods**, installation is just as simple:
 ```ruby
@@ -75,8 +71,6 @@ pod install
 💡 After running `pod install`, open the `.xcworkspace` file in Xcode, and voilà. **🧙‍♂️✨ Your app is ready to fly at lightning speed! ⚡**
 💡 **Done!** Your caching problems are now officially history.
 
-
----
 
 ## 🚀 **How to Use NimbusCache**
 
@@ -95,8 +89,6 @@ Task {
 }
 ```
 ✨ **No stutters. No lag. Just instant, smooth video playback.**
-
----
 
 ### 💾 **2️⃣ Cache Any File Efficiently**  
 Before downloading a file, **always check if it's already cached**:  
@@ -123,19 +115,11 @@ if let cachedURL = cacheManager.cachedFileURL(for: url) {
 🔹 **No duplicate downloads**—always checks the cache first.  
 🔹 **Auto-handles file management for efficiency.**  
 
----
-
 ### 🧹 **3️⃣ Smart Cache Cleanup**
 ```swift
 NimbusCacheManager.shared.clearCacheIfNeeded()
 ```
 🎯 **Storage optimized automatically.** No bloat—just a **lean, mean caching machine.**
-
----
-
-Absolutely! Here's the **entire section** rephrased with a **thematic and cinematic tone**, while keeping it clear that this is about **Cache Age & Limit**:
-
----
 
 ### ⚡ **4️⃣ Command the Cache: Set Age & Limit Like a Wizard**
 
@@ -157,8 +141,6 @@ NimbusCacheManager.shared.setCacheLimit(200.0) // Cache limit in MB
 
 💡 **Pro Tip**: Cast these spells in your `AppDelegate` to ensure the cache rules apply across your entire app.  
 
----
-
 ### 🧹 **5️⃣ Cleanse the Cache with One Swift Spell**
 
 When you need a fresh start, banish all cached files in a flash:
@@ -166,15 +148,6 @@ When you need a fresh start, banish all cached files in a flash:
 ```swift
 NimbusCacheManager.shared.clearAllCache()
 ```
-
----
-
-### **Why This Works:**
-- The numbering continues seamlessly from **4️⃣**, keeping the flow logical.  
-- The tone remains **thematic and cinematic**, with phrases like *"cast these spells"* and *"banish all cached files in a flash."*  
-- The explanations are **concise** and to the point, avoiding over-explanation while still being clear.  
-
-Let me know if you’d like further tweaks! 🚀✨
 
 ## 🌟 **Why NimbusCache Stands Out: The Magic Behind the Speed**
 
@@ -189,8 +162,6 @@ NimbusCache isn’t just another caching framework—it’s a **game-changer**. 
 | **File Type Support**  | **Any file type** – Videos, images, PDFs, and more. 🌈 | Limited to specific file types. 🚫 |
 
 ✨ **NimbusCache is built for speed, simplicity, and versatility. No bloat, no complexity—just pure caching magic.**
-
----
 
 ### **The NimbusCache Advantage: A Closer Look**
 
@@ -214,15 +185,11 @@ NimbusCache isn’t just another caching framework—it’s a **game-changer**. 
 - **Lightweight**: No extra dependencies—just pure caching power.  
 - **Open-Source**: Built for developers, by developers.  
 
----
-
 ### **Why Choose NimbusCache?**
 - **Optimized for AVPlayerItem**: Perfect for video-heavy apps.  
 - **No Extra Dependencies**: Lightweight and easy to use.  
 - **Smart Cache Management**: Automatically clears old files to save space.  
 - **Open-Source & Community-Driven**: Built for developers, by developers.  
-
----
 
 ## ❓ **FAQ**  
 
@@ -249,8 +216,6 @@ A: Use the `setCacheAgeIn(days:)` and `setCacheLimit(_:)` methods. Check out the
 ### **Q: How do I clear the cache manually?**  
 A: Use the `clearAllCache()` method to banish all cached files in one go.  
 
----
-
 ## 🔮 **What’s Next?**
 🚀 **Streaming Link Support (.m3u8)** – Coming soon! *(Because even wizards need to stream!)*  
 🚀 **Expanding support for more file formats**
@@ -259,8 +224,6 @@ A: Use the `clearAllCache()` method to banish all cached files in one go.
 
 🔔 **Stay tuned! NimbusCache is evolving—faster than a Firebolt.**
 
----
-
 ## 🎩 **Join the Magic!**
 
 NimbusCache is **open-source and community-driven**! 🌍✨
@@ -268,8 +231,6 @@ NimbusCache is **open-source and community-driven**! 🌍✨
 
 🧙‍♂️✨ **"Mischief Managed!"**
 (🌟 A nod to the magical world of Harry Potter, because with NimbusCache, your caching problems are officially solved! 🧹⚡🎉)
-
----
 
 ## 📜 **License**
 NimbusCache is licensed under **MIT**—because **fast, efficient caching should be for everyone!**
