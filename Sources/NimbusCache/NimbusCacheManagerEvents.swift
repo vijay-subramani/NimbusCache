@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol NimbusCacheEventsDelegate: AnyObject {
-    func numbusCacheRecordEvents(eventName: String, properties: [String: Any])
+    func nimbusCacheRecordEvents(eventName: String, properties: [String: Any])
 }
 
 class NimbusCacheEventsManager {
@@ -82,7 +82,7 @@ class NimbusCacheEventsManager {
         var segmentDict = [String: Any]()
         segmentDict[NimbusCacheEvents.Properties.kTotalCacheSizeInMB.rawValue] = totalCacheSizeInMB.roundedValues(toPlaces: 2)
         segmentDict[NimbusCacheEvents.Properties.kCacheLimitInMB.rawValue] = cacheLimitInMB.roundedValues(toPlaces: 2)
-
+        
         triggerEvent(eventName: NimbusCacheEvents.kNCM_CacheLimitExceeded, properties: segmentDict)
     }
 
@@ -93,12 +93,12 @@ class NimbusCacheEventsManager {
         triggerEvent(eventName: NimbusCacheEvents.kNCM_AllCacheCleared, properties: segmentDict)
     }
 
-    nonisolated static func triggerEvent(eventName: String, properties: [String: Any]) {
-        var segmentDict = [String: Any]()
+    static func triggerEvent(eventName: String, properties: [String: Any]) {
+        var segmentDict: [String: Any] = [:]
         if !properties.isEmpty {
             segmentDict.merge(properties) { (event, _) in event }
         }
-        delegate?.numbusCacheRecordEvents(eventName: eventName, properties: segmentDict)
+        delegate?.nimbusCacheRecordEvents(eventName: eventName, properties: segmentDict)
     }
 }
 

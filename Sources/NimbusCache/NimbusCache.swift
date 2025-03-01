@@ -13,22 +13,25 @@ import AVKit
 @MainActor
 public final class NimbusCache {
 
-    enum LogType: String {
+    public enum LogType: String {
         case info = "INFO"
         case warning = "WARNING"
         case error = "ERROR"
     }
 
     public static let shared = NimbusCache()
-    weak var delegate: NimbusCacheEventsDelegate?
+    public weak var delegate: NimbusCacheEventsDelegate?
 
-    nonisolated(unsafe) private var cacheLimitInMB: Double = 500 // Default limit for maximum cache size
+    private let cacheQueue = DispatchQueue(label: "com.nimbus.cache", attributes: .concurrent)
+    private var cacheLimitInMB: Double = 500 // Default limit for maximum cache size
     private var maxCacheAgeInDays: Double = 30 // Default days for oldest cache
     private var currentlyPlayingURL: URL?
 
     private init() {
         cacheLimitInMB = 500
-        clearCacheIfNeeded() // Clear excess cache on initialization
+        Task { @MainActor in
+            await clearCacheIfNeeded() // Clear excess cache on initialization
+        }
         NimbusCacheEventsManager.delegate = self
     }
 
@@ -39,12 +42,18 @@ public final class NimbusCache {
 
     // Set cache limit dynamically
     public func setCacheLimit(_ limitInMB: Double) {
-        cacheLimitInMB = limitInMB
-        clearCacheIfNeeded() // Ensure cache stays within new limit
+        cacheQueue.async(flags: .barrier) { [weak self] in
+            Task { @MainActor in
+                self?.cacheLimitInMB = limitInMB
+                await self?.clearCacheIfNeeded() // Ensure cache stays within the new limit
+            }
+        }
     }
 
     public func getCacheLimit() -> Double {
-        return cacheLimitInMB
+        return cacheQueue.sync {
+            self.cacheLimitInMB
+        }
     }
 
     nonisolated public func getFileSizeInMB(fileSize: Double) -> Double {
@@ -53,7 +62,7 @@ public final class NimbusCache {
 
     nonisolated private var cacheDirectoryURL: URL? {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
-        let nimbusCacheDirectory = cachesDirectory?.appendingPathComponent("CustomCache")
+        let nimbusCacheDirectory = cachesDirectory?.appendingPathComponent("NimbusCache")
 
         // Ensure the directory exists
         if let nimbusCacheDirectory {
@@ -110,42 +119,52 @@ public final class NimbusCache {
     }
 
     // Download and save video to cache, managing memory
-    public func downloadAndCacheFile(from url: URL) {
+    public func downloadAndCacheFile(from url: URL) async {
         let destinationURL = filePath(for: url)
 
         // Start download task
-        let config = URLSessionConfiguration.background(withIdentifier: "NimbusCacheDownload")
-        let session = URLSession(configuration: config)
-        let task = session.downloadTask(with: url) { [weak self] tempURL, response, error in
+        let task = URLSession.shared.downloadTask(with: url) { [weak self] tempURL, response, error in
             guard let self = self else { return }
             guard let tempURL = tempURL, error == nil else {
                 debugLog("Error downloading video:", error?.localizedDescription ?? "Unknown error", logType: .error)
-                NimbusCacheEventsManager.cacheOperationFailure(url: url.description, errorMessage: "Error downloading video: \(error?.localizedDescription ?? "Unknown error") ", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                Task {
+                    NimbusCacheEventsManager.cacheOperationFailure(url: url.description, errorMessage: "Error downloading video: \(error?.localizedDescription ?? "Unknown error") ", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: await getCacheLimit())
+                }
                 return
             }
 
-            do {
-                // Move downloaded file to cache directory
-                try FileManager.default.moveItem(at: tempURL, to: destinationURL)
-                debugLog("Video downloaded and saved to cache:", destinationURL, logType: .info)
-                let cachedTimeStampKey = try? destinationURL.resourceValues(forKeys: [.contentModificationDateKey])
-                let cachedTimeStamp = cachedTimeStampKey?.contentModificationDate
-                NimbusCacheEventsManager.cacheSuccess(url: url.absoluteString, fileSizeInMB: getFileSizeInMB(fileSize: Double(response?.expectedContentLength ?? 0)), totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: cachedTimeStamp))
-
-                Task {
-                    await self.clearCacheIfNeeded() // Manage cache size after new file addition
+            Task.detached { [weak self] in
+                guard let self = self else { return }
+                do {
+                    // Move downloaded file to cache directory
+                    try FileManager.default.moveItem(at: tempURL, to: destinationURL)
+                    debugLog("Video downloaded and saved to cache:", destinationURL, logType: .info)
+                    let cachedTimeStampKey = try? destinationURL.resourceValues(forKeys: [.contentModificationDateKey])
+                    let cachedTimeStamp = cachedTimeStampKey?.contentModificationDate
+                    await MainActor.run {
+                        Task {
+                            NimbusCacheEventsManager.cacheSuccess(url: url.absoluteString, fileSizeInMB: getFileSizeInMB(fileSize: Double(response?.expectedContentLength ?? 0)), totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: await getCacheLimit(), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: cachedTimeStamp))
+                            await self.clearCacheIfNeeded() // Manage cache size after new file addition
+                        }
+                    }
+                } catch {
+                    debugLog("Error saving video:", error.localizedDescription, logType: .error)
+                    await MainActor.run {
+                        Task {
+                            NimbusCacheEventsManager.cacheFailure(url: url.description, errorMessage: error.localizedDescription, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: await getCacheLimit())
+                        }
+                    }
                 }
-            } catch {
-                debugLog("Error saving video:", error.localizedDescription, logType: .error)
-                NimbusCacheEventsManager.cacheFailure(url: url.description, errorMessage: error.localizedDescription, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
             }
         }
 
-        task.resume()
+        Task {
+            task.resume()
+        }
     }
 
     // Clear old cache based on the modification date.
-    private func clearOldCacheFiles() {
+    private func clearOldCacheFiles() async {
 
         // Step 1: Calculate expiration date based on maxCacheAgeInDays
         let expirationDate = Date().addingTimeInterval(-.days(maxCacheAgeInDays))
@@ -160,18 +179,19 @@ public final class NimbusCache {
             do {
                 try FileManager.default.removeItem(at: cachedFile.url)
                 debugLog("Old Cache deleted: \(cachedFile.url)", logType: .info)
-
-                NimbusCacheEventsManager.cacheCleared(url: cachedFile.url.description, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB), fileSizeInMB: getFileSizeInMB(fileSize: Double(cachedFile.size)), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: cachedFile.modificationDate), maxCacheAgeInDays: maxCacheAgeInDays, isOldCache: true)
+                await MainActor.run {
+                    NimbusCacheEventsManager.cacheCleared(url: cachedFile.url.description, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit(), fileSizeInMB: getFileSizeInMB(fileSize: Double(cachedFile.size)), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: cachedFile.modificationDate), maxCacheAgeInDays: maxCacheAgeInDays, isOldCache: true)
+                }
 
             } catch {
                 debugLog("Failed to delete cached video at \(cachedFile.url): \(error.localizedDescription)", logType: .error)
-                NimbusCacheEventsManager.cacheOperationFailure(url: cachedFile.url.description, errorMessage: "Failed to delete cached video at \(cachedFile.url.description): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                NimbusCacheEventsManager.cacheOperationFailure(url: cachedFile.url.description, errorMessage: "Failed to delete cached video at \(cachedFile.url.description): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit())
             }
         }
     }
 
     // Cache clearing function with database checks
-    private func clearCacheIfNeeded() {
+    private func clearCacheIfNeeded() async {
         // Step 1: Get file details (URL, size, and modification date)
         let fileDetails = getCachedFileDetails()
 
@@ -184,7 +204,9 @@ public final class NimbusCache {
         // Step 3: If total cache size exceeds limit, start deleting files
         if totalCacheSize > limitInBytes {
 
-            NimbusCacheEventsManager.cacheLimitExceeded(totalCacheSizeInMB: Double(calculateCacheSizeInMB()), cacheLimitInMB: Double(cacheLimitInMB))
+            await MainActor.run {
+                NimbusCacheEventsManager.cacheLimitExceeded(totalCacheSizeInMB: Double(calculateCacheSizeInMB()), cacheLimitInMB: getCacheLimit())
+            }
 
             // Sort files by modification date (oldest first)
             let sortedFiles = fileDetails.sorted { $0.modificationDate < $1.modificationDate }
@@ -196,25 +218,32 @@ public final class NimbusCache {
                 // Skip deleting the video file if it is currently being played
                 if isFileBeingPlayed(file.url) {
                     debugLog("Skipping deletion of currently playing video: \(file.url)", logType: .warning)
-                    NimbusCacheEventsManager.cacheOperationFailure(url: file.url.description, errorMessage: "Skipping deletion of currently playing video: \(file.url.description)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                    await MainActor.run {
+                        NimbusCacheEventsManager.cacheOperationFailure(url: file.url.description, errorMessage: "Skipping deletion of currently playing video: \(file.url.description)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit())
+                    }
 
                     continue
                 }
+                Task { [weak self] in
+                    guard let self = self else { return }
+                    do {
+                        try FileManager.default.removeItem(at: file.url)
+                        totalCacheSize -= Double(file.size)
+                        debugLog("Cache deleted due to exceeded cache limit: \(file.url)", logType: .info)
+                        await MainActor.run {
+                            NimbusCacheEventsManager.cacheCleared(url: file.url.description, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit(), fileSizeInMB: getFileSizeInMB(fileSize: Double(file.size)), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: file.modificationDate), maxCacheAgeInDays: maxCacheAgeInDays, isOldCache: false)
+                        }
 
-                do {
-                    try FileManager.default.removeItem(at: file.url)
-                    totalCacheSize -= Double(file.size)
-                    debugLog("Cache deleted due to exceeded cache limit: \(file.url)", logType: .info)
-
-                    NimbusCacheEventsManager.cacheCleared(url: file.url.description, totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB), fileSizeInMB: getFileSizeInMB(fileSize: Double(file.size)), cachedTimeStamp: NimbusCommonUtil.getFormattedDateWithTime(dateValue: file.modificationDate), maxCacheAgeInDays: maxCacheAgeInDays, isOldCache: false)
-
-                } catch {
-                    debugLog("Failed to delete cached video at \(file.url): \(error.localizedDescription)", logType: .error)
-                    NimbusCacheEventsManager.cacheOperationFailure(url: file.url.description, errorMessage: "Failed to delete cached video at \(file.url.description): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                    } catch {
+                        debugLog("Failed to delete cached video at \(file.url): \(error.localizedDescription)", logType: .error)
+                        await MainActor.run {
+                            NimbusCacheEventsManager.cacheOperationFailure(url: file.url.description, errorMessage: "Failed to delete cached video at \(file.url.description): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit())
+                        }
+                    }
                 }
             }
         } else {
-            clearOldCacheFiles()
+            await clearOldCacheFiles()
         }
     }
 
@@ -228,7 +257,7 @@ public final class NimbusCache {
             // Skip deleting the video file if it is currently being played
             if isFileBeingPlayed(fileURL) {
                 debugLog("Skipping deletion of currently playing video: \(fileURL)", logType: .warning)
-                NimbusCacheEventsManager.cacheOperationFailure(url: fileURL.description, errorMessage: "Skipping deletion of currently playing video: \(fileURL.description)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                NimbusCacheEventsManager.cacheOperationFailure(url: fileURL.description, errorMessage: "Skipping deletion of currently playing video: \(fileURL.description)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit())
 
                 continue
             }
@@ -236,16 +265,16 @@ public final class NimbusCache {
             do {
                 try FileManager.default.removeItem(at: fileURL)
                 debugLog("Cache deleted at", fileURL, logType: .info)
-                NimbusCacheEventsManager.clearAllCache(totalCacheSizeInMB: Double(calculateCacheSizeInMB()), cacheLimitInMB: Double(cacheLimitInMB))
+                NimbusCacheEventsManager.clearAllCache(totalCacheSizeInMB: Double(calculateCacheSizeInMB()), cacheLimitInMB: getCacheLimit())
             } catch {
                 debugLog("Failed to delete cached video at \(fileURL): \(error.localizedDescription)", logType: .error)
 
-                NimbusCacheEventsManager.cacheOperationFailure(url: fileURL.description, errorMessage: "Failed to delete cached video at \(fileURL): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: Double(cacheLimitInMB))
+                NimbusCacheEventsManager.cacheOperationFailure(url: fileURL.description, errorMessage: "Failed to delete cached video at \(fileURL): \(error.localizedDescription)", totalCacheSizeInMB: calculateCacheSizeInMB(), cacheLimitInMB: getCacheLimit())
             }
         }
     }
 
-    nonisolated fileprivate func debugLog(_ items: Any..., separator: String = " ", terminator: String = "\n", logType: LogType) {
+    nonisolated public func debugLog(_ items: Any..., separator: String = " ", terminator: String = "\n", logType: LogType) {
 #if DEBUG
         let output = items.map { "\($0)" }.joined(separator: separator)
         print("[NimbusCache]: [\(logType.rawValue)] ", output, terminator: terminator)
@@ -255,12 +284,13 @@ public final class NimbusCache {
 }
 
 extension NimbusCache: @preconcurrency NimbusCacheEventsDelegate {
-    public func numbusCacheRecordEvents(eventName: String, properties: [String : Any]) {
-        delegate?.numbusCacheRecordEvents(eventName: eventName, properties: properties)
+    public func nimbusCacheRecordEvents(eventName: String, properties: [String : Any]) {
+        delegate?.nimbusCacheRecordEvents(eventName: eventName, properties: properties)
     }
 }
 
-extension AVPlayerItem {
+public extension AVPlayerItem {
+    @MainActor
     convenience init?(url: URL, isCacheEnabled: Bool = false, cacheManager: NimbusCache = NimbusCache.shared) async {
 
         guard isCacheEnabled else {
@@ -278,10 +308,24 @@ extension AVPlayerItem {
             let fileSize = try? cachedURL.resourceValues(forKeys: [.fileSizeKey]).fileSize
             NimbusCacheEventsManager.videoPlaybackFromCache(url: url.description, fileSizeInMB: cacheManager.getFileSizeInMB(fileSize: Double(fileSize ?? 0)), totalCacheSizeInMB: cacheManager.calculateCacheSizeInMB(), cacheLimitInMB: (Double(cacheManager.getCacheLimit())))
         } else {
+//            self.init(asset: AVAsset(url: url))
+            // Create and return AVPlayerItem after download
+
+            let asset = AVURLAsset(url: url)
+            do {
+                try await asset.load(.preferredTransform)
+                self.init(asset: asset)
+            } catch {
+                self.init(asset: asset)
+                // If no cache, download and cache asynchronously
+                cacheManager.debugLog("There is a problem doing preferredTransform for the asset", logType: .info)
+            }
+
+            // If no cache, download and cache asynchronously
             cacheManager.debugLog("Downloading and caching video", logType: .info)
-            self.init(asset: AVAsset(url: url))
+            // Download file asynchronously
+            await cacheManager.downloadAndCacheFile(from: url)
             NimbusCacheEventsManager.cachingInitiated(url: url.description, totalCacheSizeInMB: cacheManager.calculateCacheSizeInMB(), cacheLimitInMB: (Double(cacheManager.getCacheLimit())))
-            cacheManager.downloadAndCacheFile(from: url)
         }
     }
 }
