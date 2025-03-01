@@ -27,7 +27,6 @@ struct ContentView: View {
             Button("Set cache limit") {
                 viewModel.setCacheLimit(limit: 200)
             }
-
         }
         .padding()
     }
