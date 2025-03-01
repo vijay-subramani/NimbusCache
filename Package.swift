@@ -24,5 +24,6 @@ let package = Package(
             name: "NimbusCacheTests",
             dependencies: ["NimbusCache"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )

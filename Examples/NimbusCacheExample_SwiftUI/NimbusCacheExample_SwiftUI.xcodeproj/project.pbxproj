@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		796B50162D734AE900698BE5 /* NimbusCache in Frameworks */ = {isa = PBXBuildFile; productRef = 796B50152D734AE900698BE5 /* NimbusCache */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		798279762D7347D3003764F0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				796B50162D734AE900698BE5 /* NimbusCache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +77,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		796B50112D734A8000698BE5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7982795C2D7347D2003764F0 = {
 			isa = PBXGroup;
 			children = (
 				798279672D7347D2003764F0 /* NimbusCacheExample_SwiftUI */,
 				798279782D7347D3003764F0 /* NimbusCacheExample_SwiftUITests */,
 				798279822D7347D4003764F0 /* NimbusCacheExample_SwiftUIUITests */,
+				796B50112D734A8000698BE5 /* Frameworks */,
 				798279662D7347D2003764F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +125,7 @@
 			);
 			name = NimbusCacheExample_SwiftUI;
 			packageProductDependencies = (
+				796B50152D734AE900698BE5 /* NimbusCache */,
 			);
 			productName = NimbusCacheExample_SwiftUI;
 			productReference = 798279652D7347D2003764F0 /* NimbusCacheExample_SwiftUI.app */;
@@ -195,6 +209,9 @@
 			);
 			mainGroup = 7982795C2D7347D2003764F0;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				796B50142D734AE900698BE5 /* XCLocalSwiftPackageReference "../../../NimbusCache" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 798279662D7347D2003764F0 /* Products */;
 			projectDirPath = "";
@@ -558,6 +575,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		796B50142D734AE900698BE5 /* XCLocalSwiftPackageReference "../../../NimbusCache" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../NimbusCache;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		796B50152D734AE900698BE5 /* NimbusCache */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NimbusCache;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7982795D2D7347D2003764F0 /* Project object */;
 }

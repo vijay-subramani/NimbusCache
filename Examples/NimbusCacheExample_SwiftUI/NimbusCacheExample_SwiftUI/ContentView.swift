@@ -1,19 +1,32 @@
 //
 //  ContentView.swift
-//  NimbusCacheExample_SwiftUI
+//  NimbusCacheExample
 //
-//  Created by Vijaysubramani on 01/03/25.
+//  Created by Vijaysubramani on 28/02/25.
 //
 
 import SwiftUI
+import NimbusCache
 
 struct ContentView: View {
+    @StateObject private var viewModel = ContentViewModel()
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            NavigationStack {
+                VStack {
+                    NavigationLink("Play Video") {
+                        VideoPlayerView(videoUrl: viewModel.getVideoUrl())
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            Spacer()
+            Button("Clear All Cache") {
+                viewModel.clearAllCache()
+            }
+            Button("Set cache limit") {
+                viewModel.setCacheLimit(limit: 200)
+            }
         }
         .padding()
     }
