@@ -29,6 +29,7 @@ public final class NimbusCache {
 
     private init() {
         cacheLimitInMB = 500
+        maxCacheAgeInDays = 30
         Task { @MainActor in
             await clearCacheIfNeeded() // Clear excess cache on initialization
         }
@@ -38,6 +39,16 @@ public final class NimbusCache {
     // Function to set the currently playing URL
     public func setCurrentlyPlayingURL(_ url: URL) {
         currentlyPlayingURL = url
+    }
+
+    // Set cache expiry age dynamically
+    public func setCacheAgeIn(days: Double) {
+        cacheQueue.async(flags: .barrier) { [weak self] in
+            Task { @MainActor in
+                self?.maxCacheAgeInDays = days
+                await self?.clearCacheIfNeeded() // Ensure cache stays within the new limit
+            }
+        }
     }
 
     // Set cache limit dynamically
@@ -191,7 +202,7 @@ public final class NimbusCache {
     }
 
     // Cache clearing function with database checks
-    private func clearCacheIfNeeded() async {
+    public func clearCacheIfNeeded() async {
         // Step 1: Get file details (URL, size, and modification date)
         let fileDetails = getCachedFileDetails()
 
@@ -313,7 +324,7 @@ public extension AVPlayerItem {
 
             let asset = AVURLAsset(url: url)
             do {
-                try await asset.load(.preferredTransform)
+                _ = try await asset.load(.preferredTransform)
                 self.init(asset: asset)
             } catch {
                 self.init(asset: asset)
