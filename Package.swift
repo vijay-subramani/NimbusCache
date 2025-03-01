@@ -18,7 +18,7 @@ let package = Package(
         .target(
             name: "NimbusCache",
             dependencies: [],
-            path: "Sources"
+            path: "Sources/NimbusCache"
         ),
         .testTarget(
             name: "NimbusCacheTests",

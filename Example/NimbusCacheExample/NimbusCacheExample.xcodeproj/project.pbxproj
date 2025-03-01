@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		7950BC0D2D72A66000828F65 /* NimbusCache in Frameworks */ = {isa = PBXBuildFile; productRef = 7950BC0C2D72A66000828F65 /* NimbusCache */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		7950BBBC2D71FD5000828F65 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -69,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7950BC0D2D72A66000828F65 /* NimbusCache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +133,6 @@
 			);
 			name = NimbusCacheExample;
 			packageProductDependencies = (
-				7950BC0C2D72A66000828F65 /* NimbusCache */,
 			);
 			productName = NimbusCacheExample;
 			productReference = 7950BBAB2D71FD4E00828F65 /* NimbusCacheExample.app */;
@@ -223,7 +217,7 @@
 			mainGroup = 7950BBA22D71FD4E00828F65;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */,
+				7950BC1A2D732C1C00828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7950BBAC2D71FD4E00828F65 /* Products */;
@@ -592,19 +586,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */ = {
+		7950BC1A2D732C1C00828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../NimbusCache;
 		};
 /* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		7950BC0C2D72A66000828F65 /* NimbusCache */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */;
-			productName = NimbusCache;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7950BBA32D71FD4E00828F65 /* Project object */;
 }
