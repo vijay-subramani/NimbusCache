@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7950BC0D2D72A66000828F65 /* NimbusCache in Frameworks */ = {isa = PBXBuildFile; productRef = 7950BC0C2D72A66000828F65 /* NimbusCache */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7950BBBC2D71FD5000828F65 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		7950BBC52D71FD5000828F65 /* NimbusCacheExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NimbusCacheExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7950BBF52D72235F00828F65 /* Exceptions for "NimbusCacheExample" folder in "NimbusCacheExample" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7950BBAA2D71FD4E00828F65 /* NimbusCacheExample */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7950BBAD2D71FD4E00828F65 /* NimbusCacheExample */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7950BBF52D72235F00828F65 /* Exceptions for "NimbusCacheExample" folder in "NimbusCacheExample" target */,
+			);
 			path = NimbusCacheExample;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7950BC0D2D72A66000828F65 /* NimbusCache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +96,7 @@
 				7950BBAD2D71FD4E00828F65 /* NimbusCacheExample */,
 				7950BBBE2D71FD5000828F65 /* NimbusCacheExampleTests */,
 				7950BBC82D71FD5000828F65 /* NimbusCacheExampleUITests */,
+				7950BBDD2D71FE9600828F65 /* Frameworks */,
 				7950BBAC2D71FD4E00828F65 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +109,13 @@
 				7950BBC52D71FD5000828F65 /* NimbusCacheExampleUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7950BBDD2D71FE9600828F65 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +138,7 @@
 			);
 			name = NimbusCacheExample;
 			packageProductDependencies = (
+				7950BC0C2D72A66000828F65 /* NimbusCache */,
 			);
 			productName = NimbusCacheExample;
 			productReference = 7950BBAB2D71FD4E00828F65 /* NimbusCacheExample.app */;
@@ -195,6 +222,9 @@
 			);
 			mainGroup = 7950BBA22D71FD4E00828F65;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7950BBAC2D71FD4E00828F65 /* Products */;
 			projectDirPath = "";
@@ -399,6 +429,7 @@
 				DEVELOPMENT_TEAM = QLVX929S23;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NimbusCacheExample/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +459,7 @@
 				DEVELOPMENT_TEAM = QLVX929S23;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NimbusCacheExample/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +590,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../NimbusCache;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7950BC0C2D72A66000828F65 /* NimbusCache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7950BC0B2D72A65800828F65 /* XCLocalSwiftPackageReference "../../../NimbusCache" */;
+			productName = NimbusCache;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7950BBA32D71FD4E00828F65 /* Project object */;
 }
