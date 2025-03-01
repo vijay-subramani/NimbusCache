@@ -34,16 +34,25 @@
 
 ⚡ **Imagine this:** A user taps on a video, and BOOM—**instant playback** without a single loading screen. They switch screens, come back, and guess what? **Still cached.** No redownloading. No wasted bandwidth. **Just pure speed.** 🚀
 
+---
+
 ## ✨ **What Makes NimbusCache Magical?**
 
 ✅ **🚀 Hyper-Speed Video Caching** – Say goodbye to buffering.
+
 ✅ **🎥 Optimized for AVPlayerItem** – Works like a charm with native video playback.
+
 ✅ **💾 Cache Any File** – Effortlessly store & retrieve any data you need.
+
 ✅ **🧼 Auto-Managed Cache** – No manual cleanup; NimbusCache **handles everything**.
+
 ✅ **🔌 Plug & Play** – Integrate in **seconds** with SPM & CocoaPods.
+
 ✅ **🔮 Future-Ready** – More file types & advanced caching algorithms **coming soon!**
 
 ✨ **No extra dependencies. No unnecessary complexity. Just pure caching magic.**
+
+---
 
 ## 📲 **Installation**
 
@@ -51,6 +60,7 @@
 Calling NimbusCache is as easy as **summoning a Patronus**:
 
 1️⃣ **Open Xcode** → **File** → **Add Packages**
+
 2️⃣ Paste this **URL** into the search bar:
    ```
    https://github.com/vijay-subramani/NimbusCache.git
@@ -71,6 +81,7 @@ pod install
 💡 After running `pod install`, open the `.xcworkspace` file in Xcode, and voilà. **🧙‍♂️✨ Your app is ready to fly at lightning speed! ⚡**
 💡 **Done!** Your caching problems are now officially history.
 
+---
 
 ## 🚀 **How to Use NimbusCache**
 
@@ -149,6 +160,8 @@ When you need a fresh start, banish all cached files in a flash:
 NimbusCacheManager.shared.clearAllCache()
 ```
 
+---
+
 ## 🌟 **Why NimbusCache Stands Out: The Magic Behind the Speed**
 
 NimbusCache isn’t just another caching framework—it’s a **game-changer**. Built to make your app **fly faster than a Firebolt**, it combines **cutting-edge technology** with **elegant simplicity**. Here’s why developers are switching to NimbusCache:
@@ -189,7 +202,9 @@ NimbusCache isn’t just another caching framework—it’s a **game-changer**. 
 - **Optimized for AVPlayerItem**: Perfect for video-heavy apps.  
 - **No Extra Dependencies**: Lightweight and easy to use.  
 - **Smart Cache Management**: Automatically clears old files to save space.  
-- **Open-Source & Community-Driven**: Built for developers, by developers.  
+- **Open-Source & Community-Driven**: Built for developers, by developers.
+
+---  
 
 ## ❓ **FAQ**  
 
@@ -214,7 +229,9 @@ A: NimbusCache stores files in `AppName/NimbusCache` within the app’s **.cache
 A: Use the `setCacheAgeIn(days:)` and `setCacheLimit(_:)` methods. Check out the **Code Samples** section for details.  
 
 ### **Q: How do I clear the cache manually?**  
-A: Use the `clearAllCache()` method to banish all cached files in one go.  
+A: Use the `clearAllCache()` method to banish all cached files in one go. 
+
+---
 
 ## 🔮 **What’s Next?**
 🚀 **Streaming Link Support (.m3u8)** – Coming soon! *(Because even wizards need to stream!)*  
@@ -223,6 +240,8 @@ A: Use the `clearAllCache()` method to banish all cached files in one go.
 🚀 **Smarter cache eviction to maximize efficiency**
 
 🔔 **Stay tuned! NimbusCache is evolving—faster than a Firebolt.**
+
+---
 
 ## 🎩 **Join the Magic!**
 
