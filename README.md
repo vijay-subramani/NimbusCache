@@ -1,6 +1,6 @@
 # 🧹 **NimbusCache – The Swiftest Cache in the Wizarding World!** 🚀
 
-[![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen)](https://swift.org/package-manager/) [![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-brightgreen)](https://cocoapods.org/)
+[![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen)](https://swift.org/package-manager/) [![CocoaPods](https://img.shields.io/badge/CocoaPods-compatible-brightgreen)](https://cocoapods.org/) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fvijay-subramani%2FNimbusCache%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/vijay-subramani/NimbusCache) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fvijay-subramani%2FNimbusCache%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/vijay-subramani/NimbusCache)
 
 <div align="center">
   <table style="border-collapse: collapse; border: none;">
