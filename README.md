@@ -234,9 +234,12 @@ A: Use the `clearAllCache()` method to banish all cached files in one go.
 ---
 
 ## 🔮 **What’s Next?**
-🚀 **Streaming Link Support (.m3u8)** – Coming soon! *(Because even wizards need to stream!)*  
+🚀 **Streaming Link Support (.m3u8)** – Coming soon! *(Because even wizards need to stream!)*
+
 🚀 **Expanding support for more file formats**
+
 🚀 **Background caching magic for ultimate performance**
+
 🚀 **Smarter cache eviction to maximize efficiency**
 
 🔔 **Stay tuned! NimbusCache is evolving—faster than a Firebolt.**
@@ -246,9 +249,12 @@ A: Use the `clearAllCache()` method to banish all cached files in one go.
 ## 🎩 **Join the Magic!**
 
 NimbusCache is **open-source and community-driven**! 🌍✨
+
 💡 **Have an idea?** Fork the repo, submit a PR, or open an issue. Let’s build the **ultimate caching framework together!**
 
+
 🧙‍♂️✨ **"Mischief Managed!"**
+
 (🌟 A nod to the magical world of Harry Potter, because with NimbusCache, your caching problems are officially solved! 🧹⚡🎉)
 
 ## 📜 **License**
@@ -257,7 +263,9 @@ NimbusCache is licensed under **MIT**—because **fast, efficient caching should
 ---
 
 ✨ **Ready to take your app’s performance to the next level?** 🚀
+
 🔗 **Get NimbusCache today!** 🧹💨
+
 🌐 **Explore the Magic:**  
 - [GitHub Repository](https://github.com/vijay-subramani/NimbusCache)  
 - [Documentation](#) *(coming soon!)*
