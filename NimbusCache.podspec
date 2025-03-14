@@ -8,16 +8,16 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "NimbusCache"
-  spec.version      = "1.2.3"
+  spec.version      = "1.2.5"
   spec.summary      = "NimbusCache: Soar to new speeds with NimbusCache — a powerful caching framework inspired by the legendary Nimbus 2000!"
   spec.swift_version = "6.0"
+  spec.ios.deployment_target = "16.0"
+  spec.osx.deployment_target = "13.0"
   spec.description  = "NimbusCache: Soar to new speeds with NimbusCache — a powerful caching framework inspired by the legendary Nimbus 2000! Much like the broomstick that delivers unmatched speed and agility, NimbusCache provides efficient, seamless video and file caching for your iOS app. Currently optimized for AVPlayerItem video caching, it also offers the flexibility to manually cache other file types using downloadAndCache. Keep an eye out for expanded file type support as NimbusCache continues to grow and evolve! 🚀"
-
   spec.homepage     = "https://github.com/vijay-subramani/NimbusCache.git"
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author = { "Vijay Subramani" => "vijaysubramani.ios.dev@gmail.com" }
   spec.source = { :git => "https://github.com/vijay-subramani/NimbusCache.git", :tag => "v#{spec.version}"}
-
   spec.source_files  = "Sources", "Sources/**/*.{swift}"
   spec.exclude_files = "Examples"
 

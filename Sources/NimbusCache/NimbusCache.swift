@@ -85,19 +85,24 @@ public final class NimbusCache {
 
     // Get the path for storing videos
     public func filePath(for url: URL) -> URL {
-        return cacheDirectoryURL?.appendingPathComponent(url.lastPathComponent) ?? URL(fileURLWithPath: "")
+        let fileName = url.path().dropFirst().replacingOccurrences(of: "/", with: "_")
+        return cacheDirectoryURL?.appendingPathComponent(fileName) ?? URL(fileURLWithPath: "")
     }
 
     // Public method to get the cached file URL if it exists
     public func cachedFileURL(for url: URL) -> URL? {
         let path = filePath(for: url)
         debugLog("Cached file path: ", path, logType: .info)
-        return FileManager.default.fileExists(atPath: path.path) ? path : nil
+        return isFileExists(at: path.path()) ? path : nil
     }
 
     // Check if the File is already cached
     public func isCached(for url: URL) -> Bool {
-        return FileManager.default.fileExists(atPath: filePath(for: url).path)
+        return isFileExists(at: filePath(for: url).path())
+    }
+
+    private func isFileExists(at path: String) -> Bool {
+        return FileManager.default.fileExists(atPath: path)
     }
 
     // Check if the file is being played
@@ -319,9 +324,7 @@ public extension AVPlayerItem {
             let fileSize = try? cachedURL.resourceValues(forKeys: [.fileSizeKey]).fileSize
             NimbusCacheEventsManager.videoPlaybackFromCache(url: url.description, fileSizeInMB: cacheManager.getFileSizeInMB(fileSize: Double(fileSize ?? 0)), totalCacheSizeInMB: cacheManager.calculateCacheSizeInMB(), cacheLimitInMB: (Double(cacheManager.getCacheLimit())))
         } else {
-//            self.init(asset: AVAsset(url: url))
             // Create and return AVPlayerItem after download
-
             let asset = AVURLAsset(url: url)
             do {
                 _ = try await asset.load(.preferredTransform)
