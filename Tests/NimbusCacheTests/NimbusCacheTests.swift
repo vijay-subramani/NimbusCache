@@ -25,11 +25,14 @@ import Foundation
     }
 
     @Test("Set Cache limit")
-    func testSetCacheLimit() {
+    func testSetCacheLimit() async {
         let cacheLimit = 250.0
         #expect(cacheManager != nil)
         cacheManager?.setCacheLimit(cacheLimit)
+        // Wait briefly to ensure async update completes
+        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
         #expect(cacheManager?.getCacheLimit() == cacheLimit)
+
     }
 
     @Test("Check if 2 urls having same name as last path component, it will save seperately or not")
