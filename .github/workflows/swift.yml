@@ -21,8 +21,6 @@ jobs:
     - name: Build
       run: swift build
       working-directory: /Package.swift
-    - name: Get swift version
-      run: swift --version # Swift 6.0.0
     - name: Build
       run: swift build -v
     - name: Run tests
