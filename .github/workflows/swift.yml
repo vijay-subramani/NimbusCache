@@ -20,7 +20,7 @@ jobs:
         swift-version: "6.0.0"
     - name: Build
       run: swift build
-      working-directory: /Package.swift
+      working-directory: Package.swift
     - name: Build
       run: swift build -v
     - name: Run tests
