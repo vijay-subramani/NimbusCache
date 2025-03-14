@@ -1,6 +1,5 @@
 # This workflow will build a Swift project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
 name: Swift
 
 on:
@@ -11,17 +10,32 @@ on:
 
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
-    - uses: swift-actions/setup-swift@v2
-      with:
-        swift-version: "6.0.0"
-    - name: Build
-      run: swift build
-      working-directory: Package.swift
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Swift 6.0.0
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.0.0"  # Use Swift 6.0.0
+
+      # Cache Swift packages
+      - name: Cache Swift packages
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: swift-${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            swift-${{ runner.os }}-spm-
+
+      # Build the project
+      - name: Build
+        run: swift build -v
+
+      # Run tests
+      - name: Run tests
+        run: swift test -v
